@@ -53,6 +53,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataContexts\SalesContext.cs" />
+    <Compile Include="DataModels\Client.cs" />
+    <Compile Include="DataModels\EntityBase.cs" />
+    <Compile Include="DataModels\FileName.cs" />
+    <Compile Include="DataModels\Manager.cs" />
+    <Compile Include="DataModels\Product.cs" />
+    <Compile Include="DataModels\Sale.cs" />
+    <Compile Include="DataModels\TmpSale.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -60,8 +67,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DataModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
