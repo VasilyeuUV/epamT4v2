@@ -1,4 +1,5 @@
 ﻿using BLL.Interfaces;
+using BLL.Tools;
 using System;
 using System.Configuration;
 using System.IO;
@@ -16,8 +17,6 @@ namespace BLL.Watchers
     /// </summary>
     internal sealed class FolderWatcher : ILaunchable, IDisposable
     {
-        private static readonly string FILE_FILTER = ConfigurationManager.AppSettings["FileFilter"];
-
         private FileSystemWatcher _watcher;
 
         /// <summary>
@@ -34,9 +33,9 @@ namespace BLL.Watchers
         /// <summary>
         /// CTOR
         /// </summary>
-        private FolderWatcher(string path)
+        private FolderWatcher(string path, string filter)
         {
-            this._watcher = new FileSystemWatcher(path, FILE_FILTER);
+            this._watcher = new FileSystemWatcher(path, filter);
             this._watcher.IncludeSubdirectories = false;
             this._watcher.NotifyFilter = NotifyFilters.LastWrite;
             this._watcher.Changed += _watcher_Changed;
@@ -50,9 +49,9 @@ namespace BLL.Watchers
         /// <param name="path">Watched directory path</param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public static FolderWatcher CreateInstance(string path)
+        public static FolderWatcher CreateInstance(string path, string filter)
         {
-            if (string.IsNullOrWhiteSpace(path)) { return null; }
+            if (string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(filter)) { return null; }
 
             try
             {
@@ -64,7 +63,7 @@ namespace BLL.Watchers
                 return null;
             }     
 
-            return new FolderWatcher(path);
+            return new FolderWatcher(path, filter);
         }
 
                
@@ -99,41 +98,36 @@ namespace BLL.Watchers
 
 
 
-        /// <summary>
-        /// Chechk for file ready to use.
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
-        private static bool IsFileReady(string filename)
-        {
-            // If the file can be opened for exclusive access it means that the file
-            // is no longer locked by another process.
-            try
-            {
-                using (FileStream inputStream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    return inputStream.Length > 0;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
         #region FILESYSTEMWATCHER_EVENTS
         //####################################################################################################################
 
+        /// <summary>
+        /// Event when a file is added to the monitoring folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _watcher_Changed(object sender, FileSystemEventArgs e)
         {
             string filePath = e.FullPath;
-            if (IsFileReady(filePath))
+            bool incoorectFile = FileManager.CheckFileNameMatch(filePath, ConfigurationManager.AppSettings["FileNamePattern"]);
+
+            if (FileManager.CheckFileReadyToUse(filePath))
             {
+                if (incoorectFile)
+                {
+                    FileManager.DeleteFile(filePath);
+                    return;
+                }
                 NewFileDetectedEvent?.Invoke(this, filePath);
             }
         }
 
 
+        /// <summary>
+        /// On FileWatcher Error event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _watcher_Error(object sender, ErrorEventArgs e)
         {
             string err = "!" + e.GetException().GetType().ToString();
@@ -145,7 +139,7 @@ namespace BLL.Watchers
 
 
 
-        #region DISPOSING
+        #region IDISPOSABLE
         //####################################################################################################################
 
         private bool disposed = false;
@@ -193,7 +187,7 @@ namespace BLL.Watchers
 
 
 
-        #endregion // DISPOSING
+        #endregion // IDISPOSABLE
 
 
     }
