@@ -12,9 +12,14 @@
         public DbSet<Sale> Sales { get; set; }
         public DbSet<TmpSale> TmpSales { get; set; }
 
+        static SalesContext()
+        {
+            Database.SetInitializer(new SalesDBInitializer());
+        }
         public SalesContext()
             : base("name=SalesContext")
         {
         }
+
     }
 }

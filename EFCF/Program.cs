@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EFCF.DataContexts;
+using System;
+using System.Data.Entity;
 
 namespace EFCF
 {
@@ -10,6 +8,9 @@ namespace EFCF
     {
         static void Main(string[] args)
         {
+
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
         }
     }
 }

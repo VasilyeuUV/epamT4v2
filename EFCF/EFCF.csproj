@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataContexts\SalesContext.cs" />
+    <Compile Include="DataContexts\SalesDBInitializer.cs" />
     <Compile Include="DataModels\Client.cs" />
     <Compile Include="DataModels\EntityBase.cs" />
     <Compile Include="DataModels\FileName.cs" />
@@ -60,8 +61,17 @@
     <Compile Include="DataModels\Product.cs" />
     <Compile Include="DataModels\Sale.cs" />
     <Compile Include="DataModels\TmpSale.cs" />
+    <Compile Include="Interfaces\IUnitOfWorks.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Repositories\ClientRepository.cs" />
+    <Compile Include="Repositories\EFUnitOfWork.cs" />
+    <Compile Include="Repositories\FileNameRepository.cs" />
+    <Compile Include="Repositories\ManagerRepository.cs" />
+    <Compile Include="Repositories\ProductRepository.cs" />
+    <Compile Include="Repositories\SaleRepository.cs" />
+    <Compile Include="Repositories\TmpSaleRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
