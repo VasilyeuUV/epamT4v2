@@ -61,26 +61,7 @@ namespace BLL.Tools
         #region FILE_CHECK
         //##############################################################################################################
        
-            /// <summary>
-        /// Check file name match
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns>true if fileName matches the pattern; else false</returns>
-        internal static bool CheckFileNameMatch(string filePath, string pattern)
-        {
-            lock (locker)
-            {
-                if (string.IsNullOrWhiteSpace(pattern)) { return false; }
 
-                string fileName = GetFileName(filePath);
-                if (string.IsNullOrWhiteSpace(fileName)) { return false; }
-
-                Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
-                if (regex.IsMatch(fileName)) { return true; }
-                return false;
-            }
-
-        }
 
         /// <summary>
         /// Chechk for file ready to use.

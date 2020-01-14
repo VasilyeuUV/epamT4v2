@@ -43,7 +43,7 @@ namespace EFCF.Repositories
         public Sale Get(int id)
         {
             //return this._context.Sales.Find(id);
-            return this._context.Sales.FindAsync(id).Re;
+            return this._context.Sales.FindAsync(id).Result;
         }
 
         public IEnumerable<Sale> GetAll()
