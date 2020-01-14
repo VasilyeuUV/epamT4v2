@@ -10,7 +10,10 @@ namespace EFCF.DataModels
         [Required]
         public DateTime DTG { get; set; }
 
-        [Required]
+        [
+        Required,
+        Range(0, int.MaxValue)
+        ]
         public int Sum { get; set; }
 
 

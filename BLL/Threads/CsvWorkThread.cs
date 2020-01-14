@@ -1,7 +1,10 @@
-﻿using BLL.Models;
-using BLL.Parsers;
+﻿using BLL.Enums;
+using BLL.Models;
+using FileParser.Parsers;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Threading;
 
 namespace BLL.Threads
@@ -10,10 +13,13 @@ namespace BLL.Threads
     {
         private static readonly object locker = new object();
 
+
         private Thread _thread = null;
+
 
         private string[] _fileNameStruct = null;
         private string[] _fileContextStruct = null;
+
 
         private bool _abort = false;
         private bool Abort
@@ -26,8 +32,13 @@ namespace BLL.Threads
             }
         }
 
+        internal string Name { get; private set; }
+
+
         internal event EventHandler<bool> WorkCompleted;
         internal event EventHandler<string> ErrorEvent;
+
+
 
 
         /// <summary>
@@ -64,24 +75,67 @@ namespace BLL.Threads
         private void RunProcess(object obj)
         {
             string filePath = (string)obj;
-            SalesFileNameModel sfnm = null;
-
 
             // PARSE FILE NAME
-            if (!this.Abort) { return; }
+            if (this.Abort) { return; }
+            SalesFileNameModel sfnm = GetFileNameData(filePath);
+            if (sfnm == null) { this.Abort = true; }
+
+            this.Name = sfnm.FileName;
+            this._thread.Name = sfnm.FileName;
+
+            // PARSE FILE CONTENT
+            if (this.Abort) { return; }
+            IEnumerable<IDictionary<string, string>> fileData = GetFileContentData(filePath);
+            if (fileData == null || fileData.Count() < 1)
             {
-                string[] fileNameData = (new CSVParser()).GetFileNameParsingResult(filePath, ConfigurationManager.AppSettings["FileNamePattern"]);
-                lock (locker) { sfnm =  SalesFileNameModel.CreateInstance(filePath, fileNameData); }
+                //OnErrorEvent(EnumErrors.fileContentError, "filedata == null");
+                return;
             }
 
+            // CHECK CORRECT FILE CONTENT PARSING
 
 
-            this._fnsm = GetFileNameData(filePath);
-            if (this._fnsm == null) { return; }
 
 
         }
 
+
+
+        private IEnumerable<IDictionary<string, string>> GetFileContentData(string filePath)
+        {
+            CsvParser csvParser = new CsvParser();
+
+            csvParser.ParsingCompleted += CsvParser_ParsingCompleted;
+            csvParser.FieldParsed += CsvParser_FieldParsed;
+            csvParser.ErrorParsing += CsvParser_ErrorParsing;
+
+            var parsingResult = csvParser.GetParsingResult(filePath);
+
+            csvParser.ParsingCompleted -= CsvParser_ParsingCompleted;
+            csvParser.FieldParsed -= CsvParser_FieldParsed;
+            csvParser.ErrorParsing -= CsvParser_ErrorParsing;
+
+            return parsingResult;
+        }
+
+
+
+        private SalesFileNameModel GetFileNameData(string filePath)
+        {
+            lock (locker)
+            {
+                FileNameParser parser = new FileNameParser();
+                IDictionary<string, string> fileNameData = parser.GetFileNameParsingResult(filePath, this._fileNameStruct);
+                if (fileNameData == null
+                    || fileNameData.Count != this._fileNameStruct.Length)
+                {
+                    //OnErrorEvent(EnumErrors.fileNameError, $"fileNameData == null");
+                    return null;
+                }
+                return SalesFileNameModel.CreateInstance(filePath, fileNameData);
+            }
+        }
 
 
 
@@ -96,6 +150,38 @@ namespace BLL.Threads
         {
             WorkCompleted?.Invoke(this, abort);
         }
+
+
+
+
+        #region CSV_PARSER_EVENTS
+        //############################################################################################################
+
+
+        private void CsvParser_ErrorParsing(object sender, FileParser.Enums.EnumErrors e)
+        {
+
+
+
+        }
+
+        private void CsvParser_FieldParsed(object sender, IDictionary<string, string> e)
+        {
+
+
+
+
+        }
+
+        private void CsvParser_ParsingCompleted(object sender, bool e)
+        {
+
+
+
+        }
+
+        #endregion // CSV_PARSER_EVENTS
+
 
 
     }

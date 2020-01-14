@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EFCF.DataModels
 {
@@ -11,7 +10,10 @@ namespace EFCF.DataModels
         [Required]
         public DateTime DTG { get; set; }
 
-        [Required]
+        [
+        Required,
+        Range(0, int.MaxValue)
+        ]
         public int Sum { get; set; }
 
         [
