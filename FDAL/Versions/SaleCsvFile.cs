@@ -8,6 +8,7 @@ namespace FDAL.Versions
 {
     public sealed class SaleCsvFile : FileInfoBase, IRemovable
     {
+        private static readonly object locker = new object();
 
         /// <summary>
         /// CTOR
@@ -24,10 +25,13 @@ namespace FDAL.Versions
         /// <returns></returns>
         public static SaleCsvFile Create(string path)
         {
-            if (string.IsNullOrEmpty(path)) { return null; }
+            lock(locker)
+            {
+                if (string.IsNullOrEmpty(path)) { return null; }
 
-            SaleCsvFile scsvf = new SaleCsvFile(path);
-            return scsvf.file == null ? null : scsvf;
+                SaleCsvFile scsvf = new SaleCsvFile(path);
+                return scsvf.file == null ? null : scsvf;
+            }
         }
 
 
@@ -44,6 +48,8 @@ namespace FDAL.Versions
             if (regex.IsMatch(this.file.Name)) { return true; }
             return false;
         }
+
+
 
 
         /// <summary>
@@ -67,6 +73,8 @@ namespace FDAL.Versions
             }
         }
 
+
+
         /// <summary>
         /// Delete file
         /// </summary>
@@ -87,5 +95,22 @@ namespace FDAL.Versions
             }
             return false;
         }
+
+
+        #region IDISPOSABLE
+        //#############################################################################################################
+
+        public override void Dispose()
+        {
+            if (file != null) 
+            {
+                file.Delete();
+                file = null; 
+            }
+        }
+
+        #endregion // IDISPOSABLE
+
+
     }
 }

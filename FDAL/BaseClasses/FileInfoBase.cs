@@ -44,6 +44,27 @@ namespace FDAL.BaseClasses
         }
 
 
+        /// <summary>
+        /// Get file name
+        /// </summary>
+        /// <returns>empty string or file name</returns>
+        public string GetName()
+        {
+            if (file == null) { return string.Empty; }
+            return file.Name;
+        }
+
+        /// <summary>
+        /// Get file full name
+        /// </summary>
+        /// <returns></returns>
+        public string GetPath()
+        {
+            if (file == null) { return string.Empty; }
+            return file.FullName;
+        }
+
+
 
         #region IDISPOSABLE
         //#############################################################################################################
@@ -53,7 +74,7 @@ namespace FDAL.BaseClasses
             if (file != null) { file = null; }         
         }
 
-        #endregion
+        #endregion // IDISPOSABLE
 
 
     }

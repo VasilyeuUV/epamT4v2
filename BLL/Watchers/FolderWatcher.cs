@@ -1,5 +1,5 @@
 ﻿using BLL.Interfaces;
-using BLL.Tools;
+using FDAL.Versions;
 using System;
 using System.Configuration;
 using System.IO;
@@ -108,18 +108,14 @@ namespace BLL.Watchers
         /// <param name="e"></param>
         private void _watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            string filePath = e.FullPath;
-            bool incoorectFile = FileManager.CheckFileNameMatch(filePath, ConfigurationManager.AppSettings["FileNamePattern"]);
-
-            if (FileManager.CheckFileReadyToUse(filePath))
+            SaleCsvFile csvFile = SaleCsvFile.Create(e.FullPath);
+            if (csvFile == null) { return; }
+            if (!csvFile.CheckFileNameMatch(ConfigurationManager.AppSettings["FileNamePattern"]))
             {
-                if (incoorectFile)
-                {
-                    FileManager.DeleteFile(filePath);
-                    return;
-                }
-                NewFileDetectedEvent?.Invoke(this, filePath);
+                csvFile.Dispose();
+                return;
             }
+            NewFileDetectedEvent?.Invoke(this, csvFile.GetPath());
         }
 
 

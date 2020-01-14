@@ -1,5 +1,6 @@
 ﻿using BLL.Enums;
-using BLL.Tools;
+using FDAL.BaseClasses;
+using FDAL.Versions;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace BLL.Parsers
 {
     internal class CSVParser
     {
+        private static readonly object locker = new object();
         private bool _abort = false;
 
         public event EventHandler<IDictionary<string, string>> FieldParsed;
@@ -26,6 +28,31 @@ namespace BLL.Parsers
         }
 
 
+        public string[] GetFileNameParsingResult(string filePath, string pattern, char[] delimiters = null)
+        {
+            lock (locker)
+            {
+                return ParseFileName(filePath, pattern, delimiters);
+            }
+        }
+
+        public IEnumerable<IDictionary<string, string>> GetFileContentParsingResult(string path, string[] delimiters = null)
+        {
+            lock (locker)
+            {
+                return ParseFileContent(path, delimiters);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// Parse file name by delimiters
         /// </summary>
@@ -33,14 +60,18 @@ namespace BLL.Parsers
         /// <param name="pattern">file name parsing template</param>
         /// <param name="delimiters"></param>
         /// <returns></returns>
-        public string[] ParseFileName(string filePath, string pattern, char[] delimiters = null)
+        private string[] ParseFileName(string filePath, string pattern, char[] delimiters)
         {
-            if (FileManager.CheckFileNameMatch(filePath, pattern)) { OnErrorParsing(EnumErrors.fileNameError); }
+            SaleCsvFile csvFile = SaleCsvFile.Create(filePath);
 
-            string fileName = FileManager.GetFileName(filePath);
+            if (csvFile == null || !csvFile.CheckFileNameMatch(pattern))
+            {
+                OnErrorParsing(EnumErrors.fileNameError);
+            }
+
             if (delimiters == null || delimiters.Length < 1) { delimiters = new[] { '_' }; }
 
-            return fileName.Split(delimiters);
+            return csvFile.GetName().Split(delimiters);
         }
 
 
@@ -50,21 +81,23 @@ namespace BLL.Parsers
         /// <param name="filePath">file full path</param>
         /// <param name="delimiters"></param>
         /// <returns></returns>
-        public IEnumerable<IDictionary<string, string>> ParseFileContent(string filePath, string[] delimiters = null)
+        private IEnumerable<IDictionary<string, string>> ParseFileContent(string filePath, string[] delimiters)
         {
-            FileInfo fileInfo = FileManager.GetFileInfo(filePath);
-            if (fileInfo == null) 
+            SaleCsvFile csvFile = SaleCsvFile.Create(filePath);
+            if (csvFile == null)
             {
                 ParsingCompleted?.Invoke(this, this._abort);
                 return null;
             }
-                       
+         
             if (delimiters == null || delimiters.Length < 1) { delimiters = new[] { "," }; }            
 
             int count = 0;
+            string path = csvFile.GetPath();
             string[] fieldNames = new string[0];
             List<IDictionary<string, string>> lstFields = new List<IDictionary<string, string>>();
-            using (TextFieldParser tfp = new TextFieldParser(fileInfo.FullName))
+
+            using (TextFieldParser tfp = new TextFieldParser(path))
             {
                 tfp.TextFieldType = FieldType.Delimited;
                 tfp.SetDelimiters(delimiters);
