@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{980FF653-E05D-4A6C-B14D-136664E20D0D}</ProjectGuid>
+    <ProjectGuid>{19C9EC0B-5890-4B28-A2FC-E472980AA306}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>BLL</RootNamespace>
-    <AssemblyName>BLL</AssemblyName>
+    <RootNamespace>FileParser</RootNamespace>
+    <AssemblyName>FileParser</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,15 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EFCF">
-      <HintPath>..\EFCF\bin\Debug\EFCF.dll</HintPath>
-    </Reference>
-    <Reference Include="FDAL">
-      <HintPath>..\FDAL\bin\Debug\FDAL.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -52,19 +45,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\EnumErrors.cs" />
-    <Compile Include="Interfaces\ILaunchable.cs" />
-    <Compile Include="Models\SalesFileNameModel.cs" />
-    <Compile Include="Parsers\CSVParser.cs" />
+    <Compile Include="Interfaces\IParseable.cs" />
+    <Compile Include="Parsers\CsvParser.cs" />
+    <Compile Include="Parsers\FileNameParser.cs" />
+    <Compile Include="Parsers\ParserBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Threads\CsvWorkThread.cs" />
-    <Compile Include="Watchers\FolderWatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -22,13 +22,13 @@ namespace BLL.Parsers
         /// <summary>
         /// Stop Parser Job
         /// </summary>
-        public void Stop()
+        internal void Stop()
         {
             this._abort = true;
         }
 
 
-        public string[] GetFileNameParsingResult(string filePath, string pattern, char[] delimiters = null)
+        internal string[] GetFileNameParsingResult(string filePath, string pattern, char[] delimiters = null)
         {
             lock (locker)
             {
@@ -36,7 +36,7 @@ namespace BLL.Parsers
             }
         }
 
-        public IEnumerable<IDictionary<string, string>> GetFileContentParsingResult(string path, string[] delimiters = null)
+        internal IEnumerable<IDictionary<string, string>> GetFileContentParsingResult(string path, string[] delimiters = null)
         {
             lock (locker)
             {

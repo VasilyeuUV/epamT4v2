@@ -1,4 +1,5 @@
 ﻿using BLL.Interfaces;
+using BLL.Threads;
 using FDAL.Versions;
 using System;
 using System.Configuration;
@@ -25,7 +26,7 @@ namespace BLL.Watchers
         public bool IsLaunched { get; private set; } = false;
 
 
-        public event EventHandler<string> NewFileDetectedEvent;
+        //public event EventHandler<string> NewFileDetectedEvent;
 
 
 
@@ -115,7 +116,15 @@ namespace BLL.Watchers
                 csvFile.Dispose();
                 return;
             }
-            NewFileDetectedEvent?.Invoke(this, csvFile.GetPath());
+            //NewFileDetectedEvent?.Invoke(this, csvFile.GetPath());
+            CreateNewCSVHandlerThread(csvFile.GetPath());
+        }
+
+        private void CreateNewCSVHandlerThread(string v)
+        {
+            CsvWorkThread fileHandler = new FileProcessingThread(fns: FILE_NAME_STRUCT, fds: FILE_DATA_STRUCT);
+            fileHandler.WorkCompleted += FileHandler_WorkCompleted;
+            fileHandler.ErrorEvent += FileHandler_ErrorEvent;
         }
 
 
@@ -127,7 +136,7 @@ namespace BLL.Watchers
         private void _watcher_Error(object sender, ErrorEventArgs e)
         {
             string err = "!" + e.GetException().GetType().ToString();
-            NewFileDetectedEvent?.Invoke(this, err);       
+            //NewFileDetectedEvent?.Invoke(this, err);       
         }
 
         #endregion // FILESYSTEMWATCHER_EVENTS
