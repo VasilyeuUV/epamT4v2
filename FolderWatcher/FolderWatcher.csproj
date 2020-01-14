@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{980FF653-E05D-4A6C-B14D-136664E20D0D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>BLL</RootNamespace>
-    <AssemblyName>BLL</AssemblyName>
+    <ProjectGuid>{F7AD0C7C-3B24-49C2-9711-E34025523E7C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>FolderWatcher</RootNamespace>
+    <AssemblyName>FolderWatcher</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,19 +32,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EFCF">
-      <HintPath>..\EFCF\bin\Debug\EFCF.dll</HintPath>
-    </Reference>
-    <Reference Include="FDAL">
-      <HintPath>..\FDAL\bin\Debug\FDAL.dll</HintPath>
-    </Reference>
-    <Reference Include="FileParser">
-      <HintPath>..\FileParser\bin\Debug\FileParser.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -54,20 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\EnumErrors.cs" />
-    <Compile Include="Interfaces\ILaunchable.cs" />
-    <Compile Include="Models\SalesFileNameModel.cs" />
-    <Compile Include="Parsers\CSVParser.cs" />
+    <Compile Include="Interfaces\ILauncable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Threads\CsvWorkThread.cs" />
-    <Compile Include="Watchers\FolderWatcher.cs" />
+    <Compile Include="Versions\FolderWatcherBase.cs" />
+    <Compile Include="Versions\FSWVersion.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
