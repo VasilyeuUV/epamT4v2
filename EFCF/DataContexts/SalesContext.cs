@@ -11,14 +11,13 @@
         public DbSet<Product> Products { get; set; }
         public DbSet<Sale> Sales { get; set; }
 
+        //CTOR
         static SalesContext()
         {
             Database.SetInitializer(new SalesDBInitializer());
         }
-        public SalesContext()
-            : base("name=SalesContext")
-        {
-        }
+        public SalesContext() : base("name=SalesContext") { }
+        public SalesContext(string connectionString) : base(connectionString) { }
 
     }
 }

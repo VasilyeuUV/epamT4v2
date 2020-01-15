@@ -1,15 +1,13 @@
-﻿using BLL.Enums;
-using BLL.BLLModels;
+﻿using BLL.BLLModels;
 using FileParser.Parsers;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Threading;
 
 namespace BLL.Threads
 {
-    internal class CsvWorkThread
+    public class CsvWorkThread
     {
         private static readonly object locker = new object();
 
@@ -34,11 +32,11 @@ namespace BLL.Threads
             }
         }
 
-        internal string Name { get; private set; }
+        public string Name { get; private set; }
 
 
-        internal event EventHandler<bool> WorkCompleted;
-        internal event EventHandler<string> ErrorEvent;
+        public event EventHandler<bool> WorkCompleted;
+        public event EventHandler<string> ErrorEvent;
 
 
 
@@ -61,7 +59,7 @@ namespace BLL.Threads
         /// Start this Thread
         /// </summary>
         /// <param name="products"></param>
-        internal bool Start(string filePath)
+        public bool Start(string filePath)
         {
             if (!string.IsNullOrWhiteSpace(filePath))
             {

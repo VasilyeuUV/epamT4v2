@@ -23,14 +23,6 @@ namespace plAspNetWebApp
             NinjectModule serviceModule = new ServiceModule("SaleConnection");
             var kernel = new StandardKernel(orderModule, serviceModule);
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
-
-
-
-
-            //AreaRegistration.RegisterAllAreas();
-            //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            //RouteConfig.RegisterRoutes(RouteTable.Routes);
-            //BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }
 }

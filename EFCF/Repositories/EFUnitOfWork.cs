@@ -2,10 +2,6 @@
 using EFCF.DataModels;
 using EFCF.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EFCF.Repositories
 {
@@ -19,12 +15,15 @@ namespace EFCF.Repositories
         private FileNameRepository _fileNameRepository;
         private ClientRepository _clientRepository;
         private SaleRepository _saleRepository;
-        //private TmpSaleRepository _tmpSaleRepository;
 
 
-        public EFUnitOfWork(string connectionString)
+        public EFUnitOfWork()
         {
             this._context = new SalesContext();
+        }
+        public EFUnitOfWork(string connectionString)
+        {
+            this._context = new SalesContext(connectionString);
         }
 
 
@@ -51,17 +50,6 @@ namespace EFCF.Repositories
             }
         }
 
-        //public IRepository<TmpSale> TmpSales
-        //{
-        //    get
-        //    {
-        //        if (this._tmpSaleRepository == null)
-        //        {
-        //            this._tmpSaleRepository = new TmpSaleRepository(this._context);
-        //        }
-        //        return this._tmpSaleRepository;
-        //    }
-        //}
 
         public IRepository<Manager> Managers
         {

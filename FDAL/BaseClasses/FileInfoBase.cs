@@ -51,7 +51,7 @@ namespace FDAL.BaseClasses
         public string GetName()
         {
             if (file == null) { return string.Empty; }
-            return file.Name;
+            return file.Name.ToLower();
         }
 
         /// <summary>

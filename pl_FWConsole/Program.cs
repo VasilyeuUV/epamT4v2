@@ -1,6 +1,7 @@
 ﻿using pl_FWConsole.ConsoleMenus;
 using pl_FWConsole.WorkVersions;
 using System;
+using System.Linq;
 
 namespace pl_FWConsole
 {
@@ -39,11 +40,11 @@ namespace pl_FWConsole
                 Display.WaitForContinue("Error opening one/several files", ConsoleColor.Red);
                 return;
             }
-            //foreach (var file in files) { Process.StartProcessing(file); }
+            foreach (var file in files) { WorkingProcess.Start(file); }
 
-            //do
-            //{
-            //} while (Process.lstThread.Count() > 0);
+            do
+            {
+            } while (WorkingProcess.lstThread.Count() > 0);
             Display.WaitForContinue();
         }
 

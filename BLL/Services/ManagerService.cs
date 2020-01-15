@@ -55,7 +55,7 @@ namespace BLL.Services
                 throw new ValidationException("Need to specify manager id or manager name", "");
             }
 
-            var manager = Database.Managers.Get(name);
+            var manager = Database.Managers.Get<Manager>(name);
             if (manager == null)
             {
                 throw new ValidationException("This manager is not registered", "");

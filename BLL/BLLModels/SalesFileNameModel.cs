@@ -1,8 +1,10 @@
 ﻿using BLL.DTO;
 using BLL.Services;
+using EFCF.Repositories;
 using FDAL.Versions;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace BLL.BLLModels
 {
@@ -27,7 +29,7 @@ namespace BLL.BLLModels
             SaleCsvFile csvFile = SaleCsvFile.Create(filePath);
             if (csvFile == null) { return null; }
 
-            SalesFileNameModel fnsm = new SalesFileNameModel
+            SalesFileNameModel fnsm = new SalesFileNameModel()
             {
                 FullPath = csvFile.GetPath(),
                 FileName = csvFile.GetName(),
@@ -35,16 +37,19 @@ namespace BLL.BLLModels
             };
 
 
-            //ManagerService service = new ManagerService();
-            //try
-            //{               
-            //    fnsm.Manager = service.GetEntity(fileNameStruct["Manager"]);
-            //}
-            //catch (Exception)
-            //{
-            //    service.SaveEntity(new ManagerDTO(fileNameStruct["Manager"]));
-            //    fnsm.Manager = service.GetEntity(fileNameStruct["Manager"]);
-            //}
+            ManagerService service = new ManagerService(new EFUnitOfWork());
+            try
+            {
+                fnsm.Manager = service.GetEntity(fileNameStruct["Manager"]);
+                if (fnsm.Manager == null)
+                {
+                    service.SaveEntity(new ManagerDTO(fileNameStruct["Manager"]));
+                    fnsm.Manager = service.GetEntity(fileNameStruct["Manager"]);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
 
             if (fnsm.Manager == null
                 || fnsm.DTG == new DateTime())
