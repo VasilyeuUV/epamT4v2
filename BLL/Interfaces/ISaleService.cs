@@ -2,7 +2,7 @@
 
 namespace BLL.Interfaces
 {
-    interface ISaleService<T> where T : class
+    public interface ISaleService<T> where T : class
     {
         void SaveEntity(T entityDTO);
         T GetEntity(int? id);

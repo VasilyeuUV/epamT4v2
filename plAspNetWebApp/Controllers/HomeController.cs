@@ -1,30 +1,75 @@
-﻿using System;
+﻿using AutoMapper;
+using BLL.DTO;
+using BLL.Infrastructure;
+using BLL.Interfaces;
+using plAspNetWebApp.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace plAspNetWebApp.Controllers
 {
     public class HomeController : Controller
     {
+        ISaleService<ManagerDTO> saleService;
+
+        public HomeController(ISaleService<ManagerDTO> serv)
+        {
+            saleService = serv;
+        }
+
         public ActionResult Index()
         {
-            return View();
+            IEnumerable<ManagerDTO> phoneDtos = saleService.GetEntities();
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<ManagerDTO, ManagerViewModel>()).CreateMapper();
+            var managers = mapper.Map<IEnumerable<ManagerDTO>, List<ManagerViewModel>>(phoneDtos);
+            return View(managers);
         }
 
-        public ActionResult About()
+        public ActionResult MakeManager(int? id)
         {
-            ViewBag.Message = "Your application description page.";
+            try
+            {
+                ManagerDTO manager = saleService.GetEntity(id);
+                var order = new ManagerViewModel { Id = manager.Id };
 
-            return View();
+                return View(order);
+            }
+            catch (ValidationException ex)
+            {
+                return Content(ex.Message);
+            }
         }
 
-        public ActionResult Contact()
+        protected override void Dispose(bool disposing)
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            saleService.Dispose();
+            base.Dispose(disposing);
         }
+
+
+
+
+
+
+
+
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
+
+        //public ActionResult About()
+        //{
+        //    ViewBag.Message = "Your application description page.";
+
+        //    return View();
+        //}
+
+        //public ActionResult Contact()
+        //{
+        //    ViewBag.Message = "Your contact page.";
+
+        //    return View();
+        //}
     }
 }
