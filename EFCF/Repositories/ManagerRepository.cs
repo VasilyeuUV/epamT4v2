@@ -41,6 +41,11 @@ namespace EFCF.Repositories
             return this._context.Managers.Find(id);
         }
 
+        public Manager Get(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Manager> GetAll()
         {
             return this._context.Managers;

@@ -1,21 +1,25 @@
-﻿using FDAL.Versions;
+﻿using BLL.DTO;
+using BLL.Services;
+using FDAL.Versions;
 using System;
 using System.Collections.Generic;
 
-namespace BLL.Models
+namespace BLL.BLLModels
 {
     internal class SalesFileNameModel
     {
+        private string _connectionString = string.Empty;
 
         internal string FullPath { get; set; }
         internal string FileName { get; set; }
 
-        internal string Manager { get; set; }
+        internal ManagerDTO Manager { get; set; }
         internal DateTime DTG { get; set; }
 
 
-        private SalesFileNameModel()
-        {            
+        private SalesFileNameModel(string connectionString = "")
+        {
+            this._connectionString = connectionString;
         }
 
         internal static SalesFileNameModel CreateInstance(string filePath, IDictionary<string, string> fileNameStruct)
@@ -27,16 +31,28 @@ namespace BLL.Models
             {
                 FullPath = csvFile.GetPath(),
                 FileName = csvFile.GetName(),
-                Manager = fileNameStruct["Manager"],
                 DTG = GetDTG(fileNameStruct["DTG"])
             };
 
-            if (string.IsNullOrWhiteSpace(fnsm.Manager)
+
+            //ManagerService service = new ManagerService();
+            //try
+            //{               
+            //    fnsm.Manager = service.GetEntity(fileNameStruct["Manager"]);
+            //}
+            //catch (Exception)
+            //{
+            //    service.SaveEntity(new ManagerDTO(fileNameStruct["Manager"]));
+            //    fnsm.Manager = service.GetEntity(fileNameStruct["Manager"]);
+            //}
+
+            if (fnsm.Manager == null
                 || fnsm.DTG == new DateTime())
             { fnsm = null; }
             return fnsm;
-
         }
+
+
 
         /// <summary>
         /// Convert string to DateTime

@@ -1,5 +1,5 @@
 ﻿using BLL.Enums;
-using BLL.Models;
+using BLL.BLLModels;
 using FileParser.Parsers;
 using System;
 using System.Collections.Generic;
@@ -13,8 +13,10 @@ namespace BLL.Threads
     {
         private static readonly object locker = new object();
 
-
         private Thread _thread = null;
+
+        private SalesFileNameModel _sfnm = null;
+        private List<SaleParsingModel> _parsingFieldsList = null;
 
 
         private string[] _fileNameStruct = null;
@@ -49,6 +51,8 @@ namespace BLL.Threads
             this._fileContextStruct = fds;
             this._fileNameStruct = fns;
 
+            this._parsingFieldsList = new List<SaleParsingModel>();
+
             this._thread = new Thread(this.RunProcess);
         }
 
@@ -78,11 +82,11 @@ namespace BLL.Threads
 
             // PARSE FILE NAME
             if (this.Abort) { return; }
-            SalesFileNameModel sfnm = GetFileNameData(filePath);
-            if (sfnm == null) { this.Abort = true; }
+            this._sfnm = GetFileNameData(filePath);
+            if (this._sfnm == null) { this.Abort = true; }
 
-            this.Name = sfnm.FileName;
-            this._thread.Name = sfnm.FileName;
+            this.Name = this._sfnm.FileName;
+            this._thread.Name = this._sfnm.FileName;
 
             // PARSE FILE CONTENT
             if (this.Abort) { return; }
@@ -167,10 +171,14 @@ namespace BLL.Threads
 
         private void CsvParser_FieldParsed(object sender, IDictionary<string, string> e)
         {
+            SaleParsingModel sale = SaleParsingModel.CreateInstance(e);
 
+            if (sale.DTG != this._sfnm.DTG)
+            {
+                // ERROR!
+            }
 
-
-
+            this._parsingFieldsList.Add(sale);
         }
 
         private void CsvParser_ParsingCompleted(object sender, bool e)

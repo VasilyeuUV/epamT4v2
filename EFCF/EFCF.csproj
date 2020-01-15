@@ -63,7 +63,6 @@
     <Compile Include="DataModels\Manager.cs" />
     <Compile Include="DataModels\Product.cs" />
     <Compile Include="DataModels\Sale.cs" />
-    <Compile Include="DataModels\TmpSale.cs" />
     <Compile Include="Interfaces\IUnitOfWorks.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,7 +73,6 @@
     <Compile Include="Repositories\ManagerRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\SaleRepository.cs" />
-    <Compile Include="Repositories\TmpSaleRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

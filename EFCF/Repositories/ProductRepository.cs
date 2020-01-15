@@ -41,6 +41,11 @@ namespace EFCF.Repositories
             return this._context.Products.Find(id);
         }
 
+        public Product Get(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Product> GetAll()
         {
             return this._context.Products;

@@ -41,6 +41,11 @@ namespace EFCF.Repositories
             return this._context.Files.Find(id);
         }
 
+        public FileName Get(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<FileName> GetAll()
         {
             return this._context.Files;

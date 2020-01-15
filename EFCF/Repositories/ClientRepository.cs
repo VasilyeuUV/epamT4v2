@@ -41,6 +41,11 @@ namespace EFCF.Repositories
             return this._context.Clients.Find(id);
         }
 
+        public Client Get(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Client> GetAll()
         {
             return this._context.Clients;

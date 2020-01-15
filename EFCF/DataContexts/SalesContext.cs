@@ -10,7 +10,6 @@
         public DbSet<Manager> Managers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Sale> Sales { get; set; }
-        public DbSet<TmpSale> TmpSales { get; set; }
 
         static SalesContext()
         {

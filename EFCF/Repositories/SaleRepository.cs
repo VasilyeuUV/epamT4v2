@@ -46,6 +46,11 @@ namespace EFCF.Repositories
             return this._context.Sales.FindAsync(id).Result;
         }
 
+        public Sale Get(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Sale> GetAll()
         {
             return this._context.Sales.Include(m => m.Manager)

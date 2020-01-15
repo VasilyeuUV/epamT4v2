@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{980FF653-E05D-4A6C-B14D-136664E20D0D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>BLL</RootNamespace>
     <AssemblyName>BLL</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
@@ -32,7 +32,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=9.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.9.0.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="EFCF">
       <HintPath>..\EFCF\bin\Debug\EFCF.dll</HintPath>
     </Reference>
@@ -43,6 +49,9 @@
       <HintPath>..\FileParser\bin\Debug\FileParser.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -54,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLLModels\SaleParsingModel.cs" />
     <Compile Include="DTO\ClientDTO.cs" />
     <Compile Include="DTO\FileNameDTO.cs" />
     <Compile Include="DTO\ManagerDTO.cs" />
@@ -61,14 +71,20 @@
     <Compile Include="DTO\SaleDTO.cs" />
     <Compile Include="DTO\TmpSaleDTO.cs" />
     <Compile Include="Enums\EnumErrors.cs" />
+    <Compile Include="Infrastructure\ServiceModule.cs" />
+    <Compile Include="Infrastructure\ValidationException.cs" />
     <Compile Include="Interfaces\ILaunchable.cs" />
-    <Compile Include="Models\SalesFileNameModel.cs" />
+    <Compile Include="BLLModels\SalesFileNameModel.cs" />
+    <Compile Include="Interfaces\ISaleService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ManagerService.cs" />
+    <Compile Include="Services\SaleService.cs" />
     <Compile Include="Threads\CsvWorkThread.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

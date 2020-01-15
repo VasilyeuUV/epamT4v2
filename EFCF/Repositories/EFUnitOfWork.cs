@@ -19,7 +19,7 @@ namespace EFCF.Repositories
         private FileNameRepository _fileNameRepository;
         private ClientRepository _clientRepository;
         private SaleRepository _saleRepository;
-        private TmpSaleRepository _tmpSaleRepository;
+        //private TmpSaleRepository _tmpSaleRepository;
 
 
         public EFUnitOfWork(string connectionString)
@@ -51,17 +51,17 @@ namespace EFCF.Repositories
             }
         }
 
-        public IRepository<TmpSale> TmpSales
-        {
-            get
-            {
-                if (this._tmpSaleRepository == null)
-                {
-                    this._tmpSaleRepository = new TmpSaleRepository(this._context);
-                }
-                return this._tmpSaleRepository;
-            }
-        }
+        //public IRepository<TmpSale> TmpSales
+        //{
+        //    get
+        //    {
+        //        if (this._tmpSaleRepository == null)
+        //        {
+        //            this._tmpSaleRepository = new TmpSaleRepository(this._context);
+        //        }
+        //        return this._tmpSaleRepository;
+        //    }
+        //}
 
         public IRepository<Manager> Managers
         {
