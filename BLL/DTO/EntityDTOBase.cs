@@ -2,7 +2,7 @@
 
 namespace BLL.DTO
 {
-    public abstract class EntityDTOBase : IDTO
+    public abstract class EntityDTOBase
     {
         public int Id { get; set; }
         public string Name { get; set; }

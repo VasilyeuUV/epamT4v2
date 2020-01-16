@@ -4,7 +4,6 @@ using EFCF.Repositories;
 using FDAL.Versions;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace BLL.BLLModels
 {
@@ -57,12 +56,13 @@ namespace BLL.BLLModels
                     service.SaveEntity(new ManagerDTO(name));
                     manager = service.GetEntity(name);
                 }
-                return manager;
             }
             catch (Exception)
             {
-                return null;
-            }            
+                manager = null;
+            }
+            service.Dispose();
+            return manager;
         }
 
 

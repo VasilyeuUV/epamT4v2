@@ -170,7 +170,7 @@ namespace BLL.Threads
         private void CsvParser_FieldParsed(object sender, IDictionary<string, string> e)
         {
             SaleParsingModel sale = SaleParsingModel.CreateInstance(e);
-            if (sale == null || sale.DTG != this._sfnm.DTG)
+            if (sale == null || sale.DTG.Date != this._sfnm.DTG.Date)
             {
                 (sender as CsvParser)?.Stop();
                 return;

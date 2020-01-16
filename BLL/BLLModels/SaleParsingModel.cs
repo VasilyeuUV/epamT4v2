@@ -1,6 +1,7 @@
 ﻿using BLL.DTO;
 using BLL.Enums;
 using BLL.Services;
+using EFCF.Repositories;
 using System;
 using System.Collections.Generic;
 
@@ -14,10 +15,19 @@ namespace BLL.BLLModels
         internal ProductDTO Product { get; set; }
         internal ClientDTO Client { get; set; }
 
+
+        /// <summary>
+        /// CTOR
+        /// </summary>
         private SaleParsingModel()
         {
         }
 
+        /// <summary>
+        /// Create SaleParsingModel instance
+        /// </summary>
+        /// <param name="parsedData"></param>
+        /// <returns></returns>
         internal static SaleParsingModel CreateInstance(IDictionary<string, string> parsedData)
         {
             if (parsedData == null 
@@ -49,13 +59,7 @@ namespace BLL.BLLModels
             }
 
             sale.Client = GetClient(parsedData["Client"]);
-            sale.Product = GetProduct(parsedData["Client"]);
-
-            //sale.Client = GetClientFromDB(repo, parsedData["Client"])
-            //              ?? new Client() { Name = parsedData["Client"] };
-            //sale.Product = GetProductFromDB(repo, parsedData["Product"], this._checkProductsDB)
-            //              ?? new Product() { Name = parsedData["Product"], Cost = sale.Sum };
-
+            sale.Product = GetProduct(parsedData["Product"], parsedData["Cost"]);
 
             if (sale.Client == null
                 || sale.DTG == new DateTime()
@@ -67,28 +71,76 @@ namespace BLL.BLLModels
             return sale;
         }
 
-        private static ManagerDTO GetClient(string name)
-        {
+        /// <summary>
+        /// Get or create new ProductDTO object
+        /// </summary>
+        /// <param name="name">product name</param>
+        /// <param name="sum">product cost</param>
+        /// <returns></returns>
+        private static ProductDTO GetProduct(string name, string sum)
+        {            
+            ProductService service = new ProductService(new EFUnitOfWork());
+            ProductDTO product = new ProductDTO();
+            try
+            {
+                product = service.GetEntity(name);
+                if (product == null)
+                {
+                    product = new ProductDTO(name);
+                    try
+                    {
+                        int cost = Convert.ToInt32(sum);
+                        if (cost < 0) { throw new Exception(); }
+                        product.Cost = cost;
+                    }
+                    catch (Exception)
+                    {
+                        throw new Exception();
+                    }  
+                    service.SaveEntity(product);
+                    product = service.GetEntity(name);
+                }
+            }
+            catch (Exception)
+            {
+                product = null;
+            }
+            service.Dispose();
+            return product;
+        }
+
+        /// <summary>
+        /// Get or Create new ClientDTO object
+        /// </summary>
+        /// <param name="name">client name</param>
+        /// <returns></returns>
+        private static ClientDTO GetClient(string name)
+        {            
+            ClientService service = new ClientService(new EFUnitOfWork());
             ClientDTO client = new ClientDTO();
-            ManagerService service = new ManagerService(new EFUnitOfWork());
             try
             {
                 client = service.GetEntity(name);
                 if (client == null)
                 {
-                    service.SaveEntity(new ManagerDTO(name));
+                    service.SaveEntity(new ClientDTO(name)); 
                     client = service.GetEntity(name);
                 }
-                return client;
             }
             catch (Exception)
             {
-                return null;
+                client = null;
             }
+            service.Dispose();
+            return client;
         }
 
 
-
+        /// <summary>
+        /// Get date from string
+        /// </summary>
+        /// <param name="date">date as string </param>
+        /// <returns></returns>
         private static DateTime GetDTG(string date)
         {
             DateTime dtg = new DateTime();
