@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLLModels\SaleParsingModel.cs" />
+    <Compile Include="Configurations\SaleTitleConfiguration.cs" />
     <Compile Include="DTO\ClientDTO.cs" />
     <Compile Include="DTO\EntityDTOBase.cs" />
     <Compile Include="DTO\FileNameDTO.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\SaleService.cs" />
     <Compile Include="Threads\CsvWorkThread.cs" />
+    <Compile Include="Threads\CsvWorkThreadsControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -49,7 +49,7 @@ namespace FolderWatcher.Versions
         {
             if (this._watcher == null) { return; }
 
-            this.IsLaunched = true;
+            IsLaunched = true;
             try
             {
                 this._watcher.EnableRaisingEvents = true;
@@ -111,6 +111,10 @@ namespace FolderWatcher.Versions
         #region FILESYSTEMWATCHER_EVENTS
         //####################################################################################################################
 
+        private static int countOfChanged = 0;      // when copying to a folder, a file change event is called 2 times
+        private static readonly object locked = new object();
+
+
         /// <summary>
         /// Event when a file is added to the monitoring folder
         /// </summary>
@@ -118,10 +122,20 @@ namespace FolderWatcher.Versions
         /// <param name="e"></param>
         private void _watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            string filePath = e.FullPath;
-            if (IsFileReady(filePath))
-            {
-                OnNewFileDetected(filePath);
+            lock (locked)
+            {                
+                string filePath = e.FullPath;
+                if (++countOfChanged > 1)
+                {
+                    FileInfo fi = new FileInfo(filePath);
+                    if (fi.Length < 1) { countOfChanged = 1; }
+                    else
+                    {
+                        countOfChanged = 0;
+                        OnNewFileDetected(filePath);
+                    }
+
+                }
             }
         }
 

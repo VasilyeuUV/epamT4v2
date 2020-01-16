@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plAspNetWebApp", "plAspNetW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pl_FWConsole", "pl_FWConsole\pl_FWConsole.csproj", "{103D39A1-E9F7-465E-8AF8-72886AFFCA54}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pl_WinSeviceMenu", "pl_WinSeviceMenu\pl_WinSeviceMenu.csproj", "{3F0A1503-F618-4A42-9D68-1B093B3F921D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bll_WinServiceFW", "bll_WinServiceFW\bll_WinServiceFW.csproj", "{61DD9914-7D54-4D71-9102-179CD59ED8CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{103D39A1-E9F7-465E-8AF8-72886AFFCA54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{103D39A1-E9F7-465E-8AF8-72886AFFCA54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{103D39A1-E9F7-465E-8AF8-72886AFFCA54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F0A1503-F618-4A42-9D68-1B093B3F921D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F0A1503-F618-4A42-9D68-1B093B3F921D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F0A1503-F618-4A42-9D68-1B093B3F921D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F0A1503-F618-4A42-9D68-1B093B3F921D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61DD9914-7D54-4D71-9102-179CD59ED8CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61DD9914-7D54-4D71-9102-179CD59ED8CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61DD9914-7D54-4D71-9102-179CD59ED8CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61DD9914-7D54-4D71-9102-179CD59ED8CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

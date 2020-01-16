@@ -25,7 +25,7 @@ namespace plAspNetWebApp.Controllers
             return View(managers);
         }
 
-        public ActionResult MakeManager(int? id)
+        public ActionResult MakeManager(int id)
         {
             try
             {

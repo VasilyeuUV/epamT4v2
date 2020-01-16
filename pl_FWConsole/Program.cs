@@ -1,4 +1,5 @@
-﻿using pl_FWConsole.ConsoleMenus;
+﻿using FolderWatcher.Versions;
+using pl_FWConsole.ConsoleMenus;
 using pl_FWConsole.WorkVersions;
 using System;
 using System.Linq;
@@ -33,6 +34,14 @@ namespace pl_FWConsole
         {
             Console.Clear();
             Display.Message($"OPEN_FILE_VERTION WORK", ConsoleColor.Green);
+
+            if (FolderWatcherBase.IsLaunched)
+            {
+                Display.Message("Can't start FWService. FolderWather is launched.", ConsoleColor.Red);
+                Display.WaitForContinue();
+                return;
+            }
+
             string[] files = OpenFileVersion.Run();
 
             if (files == null || files.Length < 1)

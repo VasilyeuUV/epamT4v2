@@ -96,7 +96,7 @@ namespace BLL.BLLModels
                     manager = service.GetEntity(name);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 manager = null;
             }

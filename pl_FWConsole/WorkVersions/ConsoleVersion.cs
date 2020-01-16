@@ -21,7 +21,7 @@ namespace pl_FWConsole.WorkVersions
             }
 
             _fswatcher = FSWVersion.CreateInstance(watchFolder, watchFilter);
-            _fswatcher.NewFileDetectedEvent += FwLogger_NewFileDetectedEvent; ;
+            _fswatcher.NewFileDetectedEvent += FwLogger_NewFileDetectedEvent;
             Thread fwThread = new Thread(new ThreadStart(_fswatcher.Launch));
             fwThread.Start();
         }

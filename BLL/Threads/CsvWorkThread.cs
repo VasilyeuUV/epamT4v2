@@ -88,7 +88,7 @@ namespace BLL.Threads
             this._sfnm = GetFileNameData(filePath);
             if (this._sfnm == null || this._sfnm.ExistInDB) 
             {
-                OnErrorEvent(EnumErrors.fileNameError, "Incorrect file name or this file exist in DB");
+                OnErrorEvent(EnumErrors.fileNameError, "Can't get the file name data or this file exist in DB");
                 return;
             }
 
@@ -114,12 +114,13 @@ namespace BLL.Threads
                 return;
             }
 
-
             // SAVE SALES TO DB
             if (this.Abort) { return; }
             if (SaveDataToDB(this._sfnm, this._parsingFieldsList)) { OnWorkCompleting(); }
             else { OnErrorEvent(EnumErrors.saveToDbError, "Error saving to database"); }
         }
+
+
 
         /// <summary>
         /// Save to DB
@@ -128,9 +129,12 @@ namespace BLL.Threads
         /// <param name="fileData"></param>
         private bool SaveDataToDB(SalesFileNameModel sfnm, List<SaleParsingModel> parsingData)
         {
-            SaleService service = new SaleService(new EFUnitOfWork());
-            List<SaleDTO> salesDTO = GetSalesDTO(sfnm, parsingData);
-            return service.SaveEntities(salesDTO);
+            lock(locker)
+            {
+                SaleService service = new SaleService(new EFUnitOfWork());
+                List<SaleDTO> salesDTO = GetSalesDTO(sfnm, parsingData);
+                return service.SaveEntities(salesDTO);
+            }
         }
 
         private List<SaleDTO> GetSalesDTO(SalesFileNameModel sfnm, List<SaleParsingModel> parsingData)

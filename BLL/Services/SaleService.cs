@@ -145,6 +145,7 @@ namespace BLL.Services
                     return false;
                 }                
             }
+            else { return false; }
 
             foreach (var saleDTO in salesDTO)
             {
