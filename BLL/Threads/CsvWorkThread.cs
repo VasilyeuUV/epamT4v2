@@ -1,4 +1,8 @@
 ﻿using BLL.BLLModels;
+using BLL.DTO;
+using BLL.Enums;
+using BLL.Services;
+using EFCF.Repositories;
 using FileParser.Parsers;
 using System;
 using System.Collections.Generic;
@@ -77,11 +81,16 @@ namespace BLL.Threads
         private void RunProcess(object obj)
         {
             string filePath = (string)obj;
+            this.Name = filePath;
 
             // PARSE FILE NAME
             if (this.Abort) { return; }
             this._sfnm = GetFileNameData(filePath);
-            if (this._sfnm == null) { this.Abort = true; }
+            if (this._sfnm == null || this._sfnm.ExistInDB) 
+            {
+                OnErrorEvent(EnumErrors.fileNameError, "Incorrect file name or this file exist in DB");
+                return;
+            }
 
             this.Name = this._sfnm.FileName;
             this._thread.Name = this._sfnm.FileName;
@@ -91,18 +100,57 @@ namespace BLL.Threads
             IEnumerable<IDictionary<string, string>> fileData = GetFileContentData(filePath);
             if (fileData == null || fileData.Count() < 1)
             {
-                //OnErrorEvent(EnumErrors.fileContentError, "filedata == null");
+                OnErrorEvent(EnumErrors.fileContentError, "Incorrect file data");
                 return;
             }
 
-            // CHECK CORRECT FILE CONTENT PARSING
+            // CHECK CORRECT PARSING DATA
+            if (this.Abort) { return; }
+            if (this._parsingFieldsList == null
+                || fileData == null
+                || this._parsingFieldsList.Count() != fileData.Count())
+            {
+                OnErrorEvent(EnumErrors.saveToDbError, "Error file content field count");
+                return;
+            }
 
 
-
-
+            // SAVE SALES TO DB
+            if (this.Abort) { return; }
+            if (SaveDataToDB(this._sfnm, this._parsingFieldsList)) { OnWorkCompleting(); }
+            else { OnErrorEvent(EnumErrors.saveToDbError, "Error saving to database"); }
         }
 
+        /// <summary>
+        /// Save to DB
+        /// </summary>
+        /// <param name="sfnm"></param>
+        /// <param name="fileData"></param>
+        private bool SaveDataToDB(SalesFileNameModel sfnm, List<SaleParsingModel> parsingData)
+        {
+            SaleService service = new SaleService(new EFUnitOfWork());
+            List<SaleDTO> salesDTO = GetSalesDTO(sfnm, parsingData);
+            return service.SaveEntities(salesDTO);
+        }
 
+        private List<SaleDTO> GetSalesDTO(SalesFileNameModel sfnm, List<SaleParsingModel> parsingData)
+        {
+            List<SaleDTO> salesDTO = new List<SaleDTO>();
+            foreach (var item in parsingData)
+            {
+                SaleDTO saleDTO = new SaleDTO()
+                {
+                    DTG = item.DTG,
+                    Sum = item.Sum,
+                    Manager = sfnm.Manager,
+                    Product = item.Product,
+                    Client = item.Client,
+                    FileName = new FileNameDTO() { Id = 0, Name = sfnm.FileName, DTG = sfnm.DTG}
+                };
+                salesDTO.Add(saleDTO);
+            }
+            return salesDTO;
+        }
 
         private IEnumerable<IDictionary<string, string>> GetFileContentData(string filePath)
         {
@@ -120,8 +168,6 @@ namespace BLL.Threads
 
             return parsingResult;
         }
-
-
 
         private SalesFileNameModel GetFileNameData(string filePath)
         {
@@ -141,17 +187,71 @@ namespace BLL.Threads
 
 
 
-
+        #region ON_THIS_EVENTS
+        //############################################################################################################
 
         /// <summary>
         /// Thread work completed event
         /// </summary>
         /// <param name="abort">true - if thread was being aborted</param>
         /// <param name="deleteTmpData">true - if data was saved to database</param>
-        private void OnWorkCompleting(bool abort)
+        private void OnWorkCompleting(bool abort = false)
         {
             WorkCompleted?.Invoke(this, abort);
         }
+
+        /// <summary>
+        /// File Content Error Event
+        /// </summary>
+        private void OnErrorEvent(EnumErrors error, string erMsg, int n = 0)
+        {
+            bool deleteTmpData = true;
+            switch (error)
+            {
+                case EnumErrors.fileError:
+                    ErrorEvent?.Invoke(this, $"Error File: {erMsg}");
+                    break;
+                case EnumErrors.fileNameError:
+                    ErrorEvent?.Invoke(this, $"Error file name: {erMsg}");
+                    break;
+                case EnumErrors.fileContentError:
+                    ErrorEvent?.Invoke(this, $"Error file content: {erMsg}");
+                    break;
+                case EnumErrors.managerError:
+                    ErrorEvent?.Invoke(this, $"Error getting manager information: {erMsg}");
+                    break;
+                case EnumErrors.productError:
+                    ErrorEvent?.Invoke(this, $"Error getting product information: {erMsg}");
+                    break;
+                case EnumErrors.dateError:
+                    ErrorEvent?.Invoke(this, $"Error DateTime information: {erMsg}");
+                    break;
+                case EnumErrors.costError:
+                    ErrorEvent?.Invoke(this, $"Error cost converting: {erMsg}");
+                    break;
+                case EnumErrors.fileWasSaved:
+                    ErrorEvent?.Invoke(this, $"File was saved earlier: {erMsg}");
+                    deleteTmpData = false;
+                    break;
+                case EnumErrors.saveToDbError:
+                    string[] msg =
+                    {
+                        $"{n}.The amount of data processed is not equal to the amount of recorded data: {erMsg}",
+                        $"{n}.Error saving parsed field to DB: {erMsg}",
+                        $"{n}.Error saving data from temporary table: {erMsg}",
+                        $"{n}.Error deleting temporary data after saving: {erMsg}",
+                        $"{n}.Error accessing database while saving temporary data: {erMsg}",
+                        $"{n}.Error deleting temporary data from the database: {erMsg}",
+                        $"{n}.Error accessing database while deleting temporary data: {erMsg}"
+                    };
+                    ErrorEvent?.Invoke(this, msg[n]);
+                    break;
+                default: return;
+            }
+            OnWorkCompleting(true);
+        }
+
+        #endregion // ON_THIS_EVENT
 
 
 
