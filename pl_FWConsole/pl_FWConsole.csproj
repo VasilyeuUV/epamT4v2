@@ -69,12 +69,19 @@
     <Compile Include="Models\SaleModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WorkVersions\ConsoleVersion.cs" />
     <Compile Include="WorkVersions\OpenFileVersion.cs" />
     <Compile Include="WorkVersions\WorkingProcess.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FolderWatcher\FolderWatcher.csproj">
+      <Project>{F7AD0C7C-3B24-49C2-9711-E34025523E7C}</Project>
+      <Name>FolderWatcher</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

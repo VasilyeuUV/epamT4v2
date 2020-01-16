@@ -14,7 +14,7 @@ namespace pl_FWConsole
         {
             // MENU
             string[] items = { "Create file", "Start folder monitoring", "View Data", "Exit" };
-            method[] methods = new method[] { RunOpenFileVertion, RunConsoleVertion, DisplayData, Exit };
+            method[] methods = new method[] { RunOpenFileVertion, RunConsoleVersion, DisplayData, Exit };
             Task4Menu menu = new Task4Menu(items);
             int menuResult;
             do
@@ -51,38 +51,27 @@ namespace pl_FWConsole
         /// <summary>
         /// Start Console Vertion
         /// </summary>
-        private static void RunConsoleVertion()
+        private static void RunConsoleVersion()
         {
-            //Console.Clear();
-            //Display.Message($"CONSOLE_VERTION WORK", ConsoleColor.Green);
+            Console.Clear();
+            Display.Message($"CONSOLE_VERTION WORK", ConsoleColor.Green);
 
-            //ConsoleVersion.StartFileWatcher();
+            ConsoleVersion.Run();
 
-            //// START EMULATOR
-            //EmulatorThread eThread = null;
-            //Form emulator = emulatorWFA.FormMain.StartForm(true);
-            //if (emulator != null) { eThread = new EmulatorThread(emulator); }
+            Display.Message("Run the CSV file generator in Emulator");
+            Console.WriteLine("");
+            do
+            {
+                while (!Console.KeyAvailable)
+                {
+                }
+            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
 
-            //Display.Message("Run the CSV file generator in Emulator");
-            //Console.WriteLine("");
-            //do
-            //{
-            //    while (!Console.KeyAvailable)
-            //    {
-            //    }
-            //} while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+            ConsoleVersion.StopFileWatcher();
 
-            //ConsoleVersion.StopFileWatcher();
-            //eThread?.Close();
-
-            //Display.WaitForContinue("File watcher is stopped", ConsoleColor.Green);
+            Display.WaitForContinue("File watcher is stopped", ConsoleColor.Green);
         }
-
-
-
-
-
-
+        
 
         /// <summary>
         /// Display data

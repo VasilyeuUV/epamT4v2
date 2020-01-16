@@ -8,7 +8,7 @@ namespace FolderWatcher.Versions
     {
         private FileSystemWatcher _watcher = null;
 
-        public FSWVersion(string path, string filter)
+        private FSWVersion(string path, string filter)
         {
             this._watcher = new FileSystemWatcher(path, filter);
             this._watcher.IncludeSubdirectories = false;
