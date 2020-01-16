@@ -1,5 +1,6 @@
 ﻿using BLL.DTO;
 using BLL.Enums;
+using BLL.Services;
 using System;
 using System.Collections.Generic;
 
@@ -46,16 +47,46 @@ namespace BLL.BLLModels
                 /*OnErrorEvent(EnumErrors.dateError, ex.Message);*/
                 return null;
             }
-            
+
+            sale.Client = GetClient(parsedData["Client"]);
+            sale.Product = GetProduct(parsedData["Client"]);
+
             //sale.Client = GetClientFromDB(repo, parsedData["Client"])
             //              ?? new Client() { Name = parsedData["Client"] };
             //sale.Product = GetProductFromDB(repo, parsedData["Product"], this._checkProductsDB)
             //              ?? new Product() { Name = parsedData["Product"], Cost = sale.Sum };
 
 
+            if (sale.Client == null
+                || sale.DTG == new DateTime()
+                || sale.Product == null
+                || sale.Sum < 0)
+            {
+                sale = null;
+            }
             return sale;
-
         }
+
+        private static ManagerDTO GetClient(string name)
+        {
+            ClientDTO client = new ClientDTO();
+            ManagerService service = new ManagerService(new EFUnitOfWork());
+            try
+            {
+                client = service.GetEntity(name);
+                if (client == null)
+                {
+                    service.SaveEntity(new ManagerDTO(name));
+                    client = service.GetEntity(name);
+                }
+                return client;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
 
 
         private static DateTime GetDTG(string date)

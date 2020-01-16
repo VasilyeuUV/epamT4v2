@@ -6,37 +6,36 @@ using System.Collections.Generic;
 
 namespace BLL.Services
 {
-    public class ManagerService : IEntityService<ManagerDTO>
+    public class ClientService : IEntityService<ClientDTO>
     {
         IUnitOfWork Database { get; set; }
 
         /// <summary>
         /// CTOR
         /// </summary>
-        public ManagerService(IUnitOfWork uow)
+        public ClientService(IUnitOfWork uow)
         {
             Database = uow;
         }
 
 
-        private ManagerDTO ConvertToManagerDTO(Manager manager)
+        private ClientDTO ConvertToClientDTO(Client client)
         {
-            return new ManagerDTO() 
+            return new ClientDTO()
             { 
-                Id = manager.Id, 
-                Name = manager.Name 
+                Id = client.Id, 
+                Name = client.Name
             };
         }
 
-        private Manager ConvertToManager(ManagerDTO entity)
+        private Client ConvertToClient(ClientDTO entity)
         {
-            return new Manager()
+            return new Client()
             {
                 Id = entity.Id,
                 Name = entity.Name
             };
         }
-
 
         #region ISALESERVICE
         //#################################################################################################################
@@ -45,17 +44,17 @@ namespace BLL.Services
         /// Get all entities
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ManagerDTO> GetAllEntities()
+        public IEnumerable<ClientDTO> GetAllEntities()
         {
-            var managers = Database.Managers.GetAll();
-            if (managers == null) { return null; }
+            var clients = Database.Clients.GetAll();
+            if (clients == null) { return null; }
 
-            List<ManagerDTO> managersDTO = new List<ManagerDTO>();
-            foreach (var manager in managers)
+            List<ClientDTO> clientsDTO = new List<ClientDTO>();
+            foreach (var client in clients)
             {
-                managersDTO.Add(ConvertToManagerDTO(manager));
+                clientsDTO.Add(ConvertToClientDTO(client));
             }
-            return managersDTO.Count < 1 ? null : managersDTO;
+            return clientsDTO.Count < 1 ? null : clientsDTO;
         }
 
 
@@ -65,12 +64,12 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ManagerDTO GetEntity(int id = 0)
+        public ClientDTO GetEntity(int id = 0)
         {
             if (id == 0) { return null; }
 
-            var manager = Database.Managers.Get(id);
-            return manager == null ? null : ConvertToManagerDTO(manager);
+            var client = Database.Clients.Get(id);
+            return client == null ? null : ConvertToClientDTO(client);
         }
 
         /// <summary>
@@ -78,23 +77,24 @@ namespace BLL.Services
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public ManagerDTO GetEntity(string name)
+        public ClientDTO GetEntity(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) { return null; }
 
-            var manager = Database.Managers.Get<Manager>(name);
-            return manager == null ? null : ConvertToManagerDTO(manager);
+            var client = Database.Clients.Get<Client>(name);
+            return client == null ? null : ConvertToClientDTO(client);
         }
 
         /// <summary>
         /// Save entity
         /// </summary>
         /// <param name="entity"></param>
-        public void SaveEntity(ManagerDTO entity)
+        public void SaveEntity(ClientDTO entity)
         {
             if (entity == null) { return; }
-            Manager manager = ConvertToManager(entity);
-            Database.Managers.Insert(manager);
+            Client client = ConvertToClient(entity);
+
+            Database.Clients.Insert(client);
             Database.Save();
         }
 
@@ -104,19 +104,19 @@ namespace BLL.Services
         /// Update entity
         /// </summary>
         /// <param name="entity"></param>
-        public void UpdateEntity(ManagerDTO entity)
+        public void UpdateEntity(ClientDTO entity)
         {
             if (entity == null) { return; }
 
-            ManagerDTO managerDTO = GetEntity(entity.Id);
-            if (managerDTO == null)
+            ClientDTO clientDTO = GetEntity(entity.Id);
+            if (clientDTO == null)
             {
                 SaveEntity(entity);
             }
             else
             {
-                Manager manager = ConvertToManager(entity);
-                Database.Managers.Update(manager);
+                Client client = ConvertToClient(entity);
+                Database.Clients.Update(client);
                 Database.Save();
             }
         }
@@ -127,10 +127,10 @@ namespace BLL.Services
         /// <param name="id"></param>
         public void DeleteEntity(int id)
         {
-            ManagerDTO managerDTO = GetEntity(id);
-            if (managerDTO != null)
+            ClientDTO clientDTO = GetEntity(id);
+            if (clientDTO != null)
             {
-                Database.Managers.Delete(id);
+                Database.Clients.Delete(id);
                 Database.Save();
             }
         }
@@ -139,7 +139,7 @@ namespace BLL.Services
         /// Delete entity
         /// </summary>
         /// <param name="entity"></param>
-        public void DeleteEntity(ManagerDTO entity)
+        public void DeleteEntity(ClientDTO entity)
         {
             DeleteEntity(entity.Id);
         }
@@ -155,6 +155,8 @@ namespace BLL.Services
 
 
         #endregion // ISALESERVICE
+
+
 
 
     }

@@ -170,12 +170,11 @@ namespace BLL.Threads
         private void CsvParser_FieldParsed(object sender, IDictionary<string, string> e)
         {
             SaleParsingModel sale = SaleParsingModel.CreateInstance(e);
-
-            if (sale.DTG != this._sfnm.DTG)
+            if (sale == null || sale.DTG != this._sfnm.DTG)
             {
-                // ERROR!
+                (sender as CsvParser)?.Stop();
+                return;
             }
-
             this._parsingFieldsList.Add(sale);
         }
 

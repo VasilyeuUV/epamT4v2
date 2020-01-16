@@ -9,7 +9,7 @@ namespace plAspNetWebApp.Util
     {
         public override void Load()
         {
-            Bind<ISaleService<ManagerDTO>>().To<ManagerService>();
+            Bind<IEntityService<ManagerDTO>>().To<ManagerService>();
         }
     }
 }

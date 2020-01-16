@@ -9,7 +9,7 @@ namespace EFCF.Interfaces
         IRepository<Manager> Managers { get; }
         IRepository<Product> Products { get; }
         IRepository<Client> Clients { get; }
-        IRepository<FileName> Files { get; }
+        IRepository<FileName> FileNames { get; }
 
         void Save();
     }

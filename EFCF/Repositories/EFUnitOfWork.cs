@@ -35,7 +35,7 @@ namespace EFCF.Repositories
 
         public void Save()
         {
-            this._context.SaveChangesAsync();
+            this._context.SaveChanges();
         }
 
         public IRepository<Sale> Sales
@@ -87,7 +87,7 @@ namespace EFCF.Repositories
             }
         }
 
-        public IRepository<FileName> Files
+        public IRepository<FileName> FileNames
         {
             get
             {

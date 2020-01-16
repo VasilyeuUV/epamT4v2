@@ -10,9 +10,9 @@ namespace plAspNetWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        ISaleService<ManagerDTO> saleService;
+        IEntityService<ManagerDTO> saleService;
 
-        public HomeController(ISaleService<ManagerDTO> serv)
+        public HomeController(IEntityService<ManagerDTO> serv)
         {
             saleService = serv;
         }

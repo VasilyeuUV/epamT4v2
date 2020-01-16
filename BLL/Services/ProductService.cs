@@ -6,36 +6,39 @@ using System.Collections.Generic;
 
 namespace BLL.Services
 {
-    public class ManagerService : IEntityService<ManagerDTO>
+    public class ProductService : IEntityService<ProductDTO>
     {
         IUnitOfWork Database { get; set; }
 
         /// <summary>
         /// CTOR
         /// </summary>
-        public ManagerService(IUnitOfWork uow)
+        public ProductService(IUnitOfWork uow)
         {
             Database = uow;
         }
 
 
-        private ManagerDTO ConvertToManagerDTO(Manager manager)
+        private ProductDTO ConvertToProductDTO(Product product)
         {
-            return new ManagerDTO() 
-            { 
-                Id = manager.Id, 
-                Name = manager.Name 
+            return new ProductDTO()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Cost = product.Cost
             };
         }
 
-        private Manager ConvertToManager(ManagerDTO entity)
+        private Product ConvertToProduct(ProductDTO entity)
         {
-            return new Manager()
+            return new Product()
             {
                 Id = entity.Id,
-                Name = entity.Name
+                Name = entity.Name,
+                Cost = entity.Cost
             };
         }
+
 
 
         #region ISALESERVICE
@@ -45,17 +48,17 @@ namespace BLL.Services
         /// Get all entities
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ManagerDTO> GetAllEntities()
+        public IEnumerable<ProductDTO> GetAllEntities()
         {
-            var managers = Database.Managers.GetAll();
-            if (managers == null) { return null; }
+            var products = Database.Products.GetAll();
+            if (products == null) { return null; }
 
-            List<ManagerDTO> managersDTO = new List<ManagerDTO>();
-            foreach (var manager in managers)
+            List<ProductDTO> productsDTO = new List<ProductDTO>();
+            foreach (var product in products)
             {
-                managersDTO.Add(ConvertToManagerDTO(manager));
+                productsDTO.Add(ConvertToProductDTO(product));
             }
-            return managersDTO.Count < 1 ? null : managersDTO;
+            return productsDTO.Count < 1 ? null : productsDTO;
         }
 
 
@@ -65,12 +68,12 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ManagerDTO GetEntity(int id = 0)
+        public ProductDTO GetEntity(int id = 0)
         {
             if (id == 0) { return null; }
 
-            var manager = Database.Managers.Get(id);
-            return manager == null ? null : ConvertToManagerDTO(manager);
+            var product = Database.Products.Get(id);
+            return product == null ? null : ConvertToProductDTO(product);
         }
 
         /// <summary>
@@ -78,45 +81,45 @@ namespace BLL.Services
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public ManagerDTO GetEntity(string name)
+        public ProductDTO GetEntity(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) { return null; }
 
-            var manager = Database.Managers.Get<Manager>(name);
-            return manager == null ? null : ConvertToManagerDTO(manager);
+            var product = Database.Products.Get<Product>(name);
+            return product == null ? null : ConvertToProductDTO(product);
         }
 
         /// <summary>
         /// Save entity
         /// </summary>
         /// <param name="entity"></param>
-        public void SaveEntity(ManagerDTO entity)
+        public void SaveEntity(ProductDTO entity)
         {
             if (entity == null) { return; }
-            Manager manager = ConvertToManager(entity);
-            Database.Managers.Insert(manager);
+
+            Product product = ConvertToProduct(entity);
+
+            Database.Products.Insert(product);
             Database.Save();
         }
-
-
 
         /// <summary>
         /// Update entity
         /// </summary>
         /// <param name="entity"></param>
-        public void UpdateEntity(ManagerDTO entity)
+        public void UpdateEntity(ProductDTO entity)
         {
             if (entity == null) { return; }
 
-            ManagerDTO managerDTO = GetEntity(entity.Id);
-            if (managerDTO == null)
+            ProductDTO productDTO = GetEntity(entity.Id);
+            if (productDTO == null)
             {
                 SaveEntity(entity);
             }
             else
             {
-                Manager manager = ConvertToManager(entity);
-                Database.Managers.Update(manager);
+                Product product = ConvertToProduct(entity);
+                Database.Products.Update(product);
                 Database.Save();
             }
         }
@@ -127,10 +130,10 @@ namespace BLL.Services
         /// <param name="id"></param>
         public void DeleteEntity(int id)
         {
-            ManagerDTO managerDTO = GetEntity(id);
-            if (managerDTO != null)
+            ProductDTO productDTO = GetEntity(id);
+            if (productDTO != null)
             {
-                Database.Managers.Delete(id);
+                Database.Products.Delete(id);
                 Database.Save();
             }
         }
@@ -139,7 +142,7 @@ namespace BLL.Services
         /// Delete entity
         /// </summary>
         /// <param name="entity"></param>
-        public void DeleteEntity(ManagerDTO entity)
+        public void DeleteEntity(ProductDTO entity)
         {
             DeleteEntity(entity.Id);
         }
@@ -155,7 +158,6 @@ namespace BLL.Services
 
 
         #endregion // ISALESERVICE
-
 
     }
 }

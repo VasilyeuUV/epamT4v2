@@ -8,10 +8,10 @@ namespace pl_FWConsole.WorkVersions
 {
     public static class WorkingProcess
     {
-        private static object locker = new object();
-        private static SaleConfiguration cfg = new SaleConfiguration();
+        private static object locker = new object();        
         internal static List<CsvWorkThread> lstThread = new List<CsvWorkThread>();
 
+        private static SaleConfiguration cfg = new SaleConfiguration();
         private static readonly string[] FILE_NAME_STRUCT = { cfg.ManagerSing, cfg.DataTimeSing };
         private static readonly string[] FILE_DATA_STRUCT = { cfg.DataTimeSing, cfg.ClientSing, cfg.ProductSing, cfg.SumSing };
 

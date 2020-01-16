@@ -36,25 +36,33 @@ namespace BLL.BLLModels
                 DTG = GetDTG(fileNameStruct["DTG"])
             };
 
-
-            ManagerService service = new ManagerService(new EFUnitOfWork());
-            try
-            {
-                fnsm.Manager = service.GetEntity(fileNameStruct["Manager"]);
-                if (fnsm.Manager == null)
-                {
-                    service.SaveEntity(new ManagerDTO(fileNameStruct["Manager"]));
-                    fnsm.Manager = service.GetEntity(fileNameStruct["Manager"]);
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            fnsm.Manager = GetManager(fileNameStruct["Manager"]);
 
             if (fnsm.Manager == null
                 || fnsm.DTG == new DateTime())
             { fnsm = null; }
             return fnsm;
+        }
+
+
+        private static ManagerDTO GetManager(string name)
+        {
+            ManagerDTO manager = new ManagerDTO();
+            ManagerService service = new ManagerService(new EFUnitOfWork());
+            try
+            {
+                manager = service.GetEntity(name);
+                if (manager == null)
+                {
+                    service.SaveEntity(new ManagerDTO(name));
+                    manager = service.GetEntity(name);
+                }
+                return manager;
+            }
+            catch (Exception)
+            {
+                return null;
+            }            
         }
 
 

@@ -12,8 +12,6 @@ namespace EFCF.Repositories
     {
         public SaleRepository(SalesContext context) : base(context) { }
 
-
-
         public override IEnumerable<Sale> GetAll()
         {
             return Context.Sales.Include(m => m.Manager)
@@ -21,6 +19,8 @@ namespace EFCF.Repositories
                                 .Include(f => f.FileName)
                                 .Include(c => c.Client);
         }
+
+
 
 
         //public IEnumerable<Sale> Find(Func<Sale, bool> predicate)

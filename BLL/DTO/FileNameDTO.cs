@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.DTO
 {
-    class FileNameDTO
+    public class FileNameDTO : EntityDTOBase
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public DateTime? DTG { get; set; }
+        public DateTime DTG { get; set; }
     }
 }

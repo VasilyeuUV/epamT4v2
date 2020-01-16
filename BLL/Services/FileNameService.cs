@@ -6,37 +6,38 @@ using System.Collections.Generic;
 
 namespace BLL.Services
 {
-    public class ManagerService : IEntityService<ManagerDTO>
+    public class FileNameService : IEntityService<FileNameDTO>
     {
         IUnitOfWork Database { get; set; }
 
         /// <summary>
         /// CTOR
         /// </summary>
-        public ManagerService(IUnitOfWork uow)
+        public FileNameService(IUnitOfWork uow)
         {
             Database = uow;
         }
 
 
-        private ManagerDTO ConvertToManagerDTO(Manager manager)
+        private FileNameDTO ConvertToFileNameDTO(FileName fileName)
         {
-            return new ManagerDTO() 
-            { 
-                Id = manager.Id, 
-                Name = manager.Name 
+            return new FileNameDTO()
+            {
+                Id = fileName.Id,
+                Name = fileName.Name,
+                DTG = fileName.DTG
             };
         }
 
-        private Manager ConvertToManager(ManagerDTO entity)
+        private FileName ConvertToFileName(FileNameDTO entity)
         {
-            return new Manager()
+            return new FileName()
             {
                 Id = entity.Id,
-                Name = entity.Name
+                Name = entity.Name,
+                DTG = entity.DTG
             };
         }
-
 
         #region ISALESERVICE
         //#################################################################################################################
@@ -45,17 +46,17 @@ namespace BLL.Services
         /// Get all entities
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ManagerDTO> GetAllEntities()
+        public IEnumerable<FileNameDTO> GetAllEntities()
         {
-            var managers = Database.Managers.GetAll();
-            if (managers == null) { return null; }
+            var fileNames = Database.FileNames.GetAll();
+            if (fileNames == null) { return null; }
 
-            List<ManagerDTO> managersDTO = new List<ManagerDTO>();
-            foreach (var manager in managers)
+            List<FileNameDTO> fileNamesDTO = new List<FileNameDTO>();
+            foreach (var fileName in fileNames)
             {
-                managersDTO.Add(ConvertToManagerDTO(manager));
+                fileNamesDTO.Add(ConvertToFileNameDTO(fileName));
             }
-            return managersDTO.Count < 1 ? null : managersDTO;
+            return fileNamesDTO.Count < 1 ? null : fileNamesDTO;
         }
 
 
@@ -65,12 +66,12 @@ namespace BLL.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ManagerDTO GetEntity(int id = 0)
+        public FileNameDTO GetEntity(int id = 0)
         {
             if (id == 0) { return null; }
 
-            var manager = Database.Managers.Get(id);
-            return manager == null ? null : ConvertToManagerDTO(manager);
+            var fileName = Database.FileNames.Get(id);
+            return fileName == null ? null : ConvertToFileNameDTO(fileName);
         }
 
         /// <summary>
@@ -78,23 +79,24 @@ namespace BLL.Services
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public ManagerDTO GetEntity(string name)
+        public FileNameDTO GetEntity(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) { return null; }
 
-            var manager = Database.Managers.Get<Manager>(name);
-            return manager == null ? null : ConvertToManagerDTO(manager);
+            var fileName = Database.FileNames.Get<FileName>(name);
+            return fileName == null ? null : ConvertToFileNameDTO(fileName);
         }
 
         /// <summary>
         /// Save entity
         /// </summary>
         /// <param name="entity"></param>
-        public void SaveEntity(ManagerDTO entity)
+        public void SaveEntity(FileNameDTO entity)
         {
             if (entity == null) { return; }
-            Manager manager = ConvertToManager(entity);
-            Database.Managers.Insert(manager);
+            FileName fileName = ConvertToFileName(entity);
+
+            Database.FileNames.Insert(fileName);
             Database.Save();
         }
 
@@ -104,19 +106,19 @@ namespace BLL.Services
         /// Update entity
         /// </summary>
         /// <param name="entity"></param>
-        public void UpdateEntity(ManagerDTO entity)
+        public void UpdateEntity(FileNameDTO entity)
         {
             if (entity == null) { return; }
 
-            ManagerDTO managerDTO = GetEntity(entity.Id);
-            if (managerDTO == null)
+            FileNameDTO fileNameDTO = GetEntity(entity.Id);
+            if (fileNameDTO == null)
             {
                 SaveEntity(entity);
             }
             else
             {
-                Manager manager = ConvertToManager(entity);
-                Database.Managers.Update(manager);
+                FileName fileName = ConvertToFileName(entity);
+                Database.FileNames.Update(fileName);
                 Database.Save();
             }
         }
@@ -127,10 +129,10 @@ namespace BLL.Services
         /// <param name="id"></param>
         public void DeleteEntity(int id)
         {
-            ManagerDTO managerDTO = GetEntity(id);
-            if (managerDTO != null)
+            FileNameDTO fileNameDTO = GetEntity(id);
+            if (fileNameDTO != null)
             {
-                Database.Managers.Delete(id);
+                Database.FileNames.Delete(id);
                 Database.Save();
             }
         }
@@ -139,7 +141,7 @@ namespace BLL.Services
         /// Delete entity
         /// </summary>
         /// <param name="entity"></param>
-        public void DeleteEntity(ManagerDTO entity)
+        public void DeleteEntity(FileNameDTO entity)
         {
             DeleteEntity(entity.Id);
         }
@@ -155,6 +157,7 @@ namespace BLL.Services
 
 
         #endregion // ISALESERVICE
+
 
 
     }
